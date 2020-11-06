@@ -1,0 +1,5 @@
+.idea
+uservars.mk
+texada
+texadatest
+texada-src/bin/*

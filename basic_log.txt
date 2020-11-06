@@ -1,0 +1,20 @@
+start, input:0
+stop, input:Left
+move_left, input:Left
+stop, input:Right
+move_right, input:Right
+--
+start, input:0
+stop, input:Left
+move_left, input:Left
+stop, input:Right
+move_right, input:Right
+--
+start, input:0
+--
+start, input:0
+--
+start, input:0
+--
+start, input:0
+--

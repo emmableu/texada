@@ -1,0 +1,21 @@
+,0,1,2
+0,start,input:0,x:0 y:-145 input:0
+1,stop,input:Left,x:0 y:-145 input:Left
+2,move_left,input:Left,x:-10 y:-145 input:Left
+3,stop,input:Right,x:-80 y:-145 input:Right
+4,move_right,input:Right,x:-70 y:-145 input:Right
+5,next_round,,
+6,start,input:0,x:0 y:-145 input:0
+7,stop,input:Left,x:0 y:-145 input:Left
+8,move_left,input:Left,x:-10 y:-145 input:Left
+9,stop,input:Right,x:-80 y:-145 input:Right
+10,move_right,input:Right,x:-70 y:-145 input:Right
+11,next_round,,
+12,start,input:0,x:0 y:-145 input:0
+13,next_round,,
+14,start,input:0,x:0 y:-145 input:0
+15,next_round,,
+16,start,input:0,x:0 y:-145 input:0
+17,next_round,,
+18,start,input:0,x:0 y:-145 input:0
+19,next_round,,
