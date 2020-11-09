@@ -45,7 +45,7 @@ for line in predicate_list:
     if line[0] == "next_round":
         basic_log.append("--\n")
         continue
-    basic_log.append(line[0] + ', ' + line[1] + "\n")
+    basic_log.append(line[1] + '\n' + line[0] + "\n..\n")
 
 
 file = open('basic_log.txt', 'w')

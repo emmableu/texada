@@ -1,20 +1,48 @@
-start, input:0
-stop, input:Left
-move_left, input:Left
-stop, input:Right
-move_right, input:Right
+input:0
+start
+..
+input:Left
+stop
+..
+input:Left
+move_left
+..
+input:Right
+stop
+..
+input:Right
+move_right
+..
 --
-start, input:0
-stop, input:Left
-move_left, input:Left
-stop, input:Right
-move_right, input:Right
+input:0
+start
+..
+input:Left
+stop
+..
+input:Left
+move_left
+..
+input:Right
+stop
+..
+input:Right
+move_right
+..
 --
-start, input:0
+input:0
+start
+..
 --
-start, input:0
+input:0
+start
+..
 --
-start, input:0
+input:0
+start
+..
 --
-start, input:0
+input:0
+start
+..
 --
