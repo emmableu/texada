@@ -3,3 +3,4 @@ uservars.mk
 texada
 texadatest
 texada-src/bin/*
+.DS_STORE
