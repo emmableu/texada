@@ -7,9 +7,9 @@ all_sprites = set([d['sprite']['name'] for d in data])
 predicate_list_dict = {}
 
 for sprite in all_sprites:
-    predicate_list_dict[sprite] = pd.DataFrame(columns = ['clockTime', 'motion', 'x', 'y', 'touching', 'block', 'keysDown', 'variables', 'stageVariables'])
+    predicate_list_dict[sprite] = pd.DataFrame(columns = ['clockTime', 'x', 'y', 'touching', 'block', 'keysDown', 'variables', 'stageVariables'])
 
-complete_df = pd.DataFrame(columns = ['clockTime', 'sprite', 'motion', 'x', 'y', 'touching', 'block', 'keysDown', 'variables', 'stageVariables'])
+complete_df = pd.DataFrame(columns = ['clockTime', 'sprite', 'x', 'y', 'touching', 'block', 'keysDown', 'variables', 'stageVariables'])
 
 stage_var_dict = {}
 
@@ -49,14 +49,13 @@ def get_data_per_sprite():
         sprite_df = predicate_list_dict[sprite]
         sprite_df.loc[len(sprite_df)] = {
             "clockTime": d['clockTime'],
-            "motion": "motion",
             'x': d["sprite"]['x'],
             'y': d["sprite"]['y'],
             'touching': d["sprite"]["touching"],
             'block': block_simplify(d['block']),
             'keysDown': d['keysDown'],
             'variables': variable_simplify(d['sprite']['variables'], stage_var_dict),
-            'stageVariables': variable_simplify(stage_variable, stage_var_dict)
+            'stageVariables': variable_simplify(d['stageVariables'], stage_var_dict)
         }
     for sprite in all_sprites:
         df = pd.DataFrame(predicate_list_dict[sprite])
@@ -68,7 +67,6 @@ def get_data():
         complete_df.loc[len(complete_df)] = {
             "clockTime": d['clockTime'],
             "sprite": d['sprite']['name'],
-            "motion": "motion",
             'x': d["sprite"]['x'],
             'y': d["sprite"]['y'],
             'touching': d["sprite"]["touching"],
@@ -82,3 +80,4 @@ def get_data():
 
 
 get_data()
+get_data_per_sprite()
