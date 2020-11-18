@@ -1,65 +1,63 @@
-output = open('output.txt', 'r')
-lines = output.readlines()
-predicate_list = []
-last_line = ""
-for line in lines:
-    line = line.rstrip()
-    if line == "# project: sample.sb3":
-        continue
-    elif line == "--":
-        if not predicate_list:
-            continue
-        else:
-            predicate_list.append(["next_round", "", ""])
-            last_line = ""
-            continue
-    elif line == last_line:
-        continue
-    elif line != last_line and len(line.split(" "))>1:
-        if not last_line:
-            predicate_list.append(["start", line.split(" ")[-1], line])
-        else:
-            data_list = [data.split(":")[1] for data in line.split(" ")]
-            x, y, input = [int(data_list[0]), int(data_list[1]), data_list[2]]
-            print("last_line: ", last_line)
-            last_line_list = [data.split(":")[1] for data in last_line.split(" ")]
-            last_x, last_y, last_input = [int(last_line_list[0]), int(last_line_list[1]), last_line_list[2]]
-            # if input is not the same as the last_input, then there must be a new entry in predicate_list
-            if input != last_input and x == last_x and y == last_y:
-                predicate_list.append(["stop", line.split(" ")[-1], line])
-#            if input x is not the same as the last_input, then should check the last entry in predicate_list
-#            if it's move_left, then if x < last_x, no need to add in new entry.
-            if x != last_x and y == last_y and input == last_input:
-                moving_predicates = ['move_left', 'move_right']
-                if predicate_list[-1][0] not in moving_predicates:
-                    left_or_right = int(x - last_x > 0)
-                    predicate_list.append([moving_predicates[left_or_right], line.split(" ")[-1], line])
-    last_line = line
-
+import json
 import pandas as pd
-df = pd.DataFrame(predicate_list)
-df.to_csv("predicate_list.csv")
+output = open('output.json', 'r')
+data = json.load(output)
+# print(json.dumps(data[0:4], indent=4, separators=(',', ': ')))
+all_sprites = set([d['sprite']['name'] for d in data])
+predicate_list_dict = {}
 
-basic_log = []
-for line in predicate_list:
-    if line[0] == "next_round":
-        basic_log.append("--\n")
-        continue
-    basic_log.append(line[1] + '\n' + line[0] + "\n..\n")
+for sprite in all_sprites:
+    predicate_list_dict[sprite] = pd.DataFrame(columns = ['timestamp', 'motion', 'x', 'y', 'touching', 'block', 'keysDown', 'variables', 'stageVariables'])
 
-
-file = open('basic_log.txt', 'w')
-file.writelines(basic_log)
-file.close()
+stage_var_dict = {}
 
 
+def block_simplify(block):
+    if "opcode" not in block:
+        return block
+    opcode = block['opcode']
+    simple_field = ""
+    if block['fields']:
+        field = block['fields']
+        field_key = list(field.keys())[0]
+        value = field[field_key]['value']
+        simple_field = "(" + field_key + ":" + str(value) + ")"
+    if not block['inputs']:
+        return opcode + simple_field
+    else:
+        sub_blocks = ""
+        for input_block in block['inputs']:
+            simple_sub_block = block_simplify(input_block)
+            sub_blocks += simple_sub_block
+        simple_block = opcode + simple_field + "{" + sub_blocks + "}"
+        return simple_block
 
 
+for d in data:
+    sprite = d['sprite']['name']
+    sprite_df = predicate_list_dict[sprite]
 
+    stage_variable = d['stageVariables']
+    simplified_variables = {}
+    for variable in stage_variable.keys():
+        if variable not in stage_var_dict:
+            stage_var_dict[variable] = "var" + str(len(stage_var_dict) + 1)
+        simplified_variables[stage_var_dict[variable]] = stage_variable[variable]['value']
 
+    sprite_df.loc[len(sprite_df)] = {
+        "timestamp": d['clockTime'],
+        "motion": "motion",
+        'x': d["sprite"]['x'],
+        'y': d["sprite"]['y'],
+        'touching': d["sprite"]["touching"],
+        'block': block_simplify(d['block']),
+        'keysDown': d['keysDown'],
+        'variables': d['sprite']['variables'],
+        'stageVariables': simplified_variables
+    }
 
-
-
-
+for sprite in all_sprites:
+    df = pd.DataFrame(predicate_list_dict[sprite])
+    df.to_csv("output/" + sprite + ".csv")
 
 
